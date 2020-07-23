@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="legend">
+        <!-- <div class="btn-group">
+          <div [class.selected]="isLP" class="btn" (click)="createLP()">LP</div>
+          <div [class.selected]="isHP" class="btn" (click)="createHP()">HP</div>
+        </div> -->
+        <div [class.hidden]="!isHP && !isLP" class="group1">
+          <div class="line-width">
+            <hr />
+          </div>
+          <div class="text nli">NLI</div>
+        </div>
+        <div [class.hidden]="isLP" [class.hidden]="!isHP && !isLP" class="group2">
+          <div class="prediction predicitonLine">--------------</div>
+          <div class="text prediction">NLI Prediction</div>
+        </div>
+      </div>
+    <div class="main" #container></div>
+</div>
+
+  

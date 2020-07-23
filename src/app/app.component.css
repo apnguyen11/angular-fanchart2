@@ -1,0 +1,75 @@
+.legend {
+    display: flex;
+    justify-content: center;
+    margin-bottom: -11%;
+    margin-top: 3%;
+    flex-direction: column;
+    margin-left: -2%;
+  }
+  
+  hr {
+    background-color: steelblue;
+    border: steelblue;
+    height: 2px;
+  }
+  
+  .line-width {
+    width: 75px;
+  }
+  
+  .group1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .group2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5.5%;
+  }
+  
+  .text {
+    padding-left: 1%;
+    font-size: 100;
+  }
+  
+  .nli {
+    color: steelblue;
+  }
+  
+  .prediction {
+    color: white;
+    white-space: nowrap;
+  }
+  
+  .btn {
+    border: 1px solid white;
+    /* position: absolute; */
+    color: white;
+  }
+  
+  .btn-group {
+    display: flex;
+    width: 20%;
+    float: right;
+    padding-left: 47%;
+  }
+  
+  .selected {
+    background-color: cadetblue;
+  }
+  
+  .hidden {
+    display: none;
+  }
+
+  .container {
+      height: 100%;
+      background-color:black;
+  }
+ 
+  .main {
+    background-color: black;
+  }
