@@ -44,12 +44,11 @@ export class AppComponent {
   public isHP: boolean = true;
 
   constructor() {
-    console.log(this.data)
+    console.log(this.LPData)
   }
 
   ngOnInit() {
-    console.log(new Date(this.data[0].NLI_time));
-    console.log(this.dataPrediction, '***');
+    console.log(new Date(this.LPData[0].NLI_time));
     const containerDiv = this.container.nativeElement;
     if (containerDiv.childNodes[0]) {
       containerDiv.removeChild(containerDiv.childNodes[0]);
@@ -90,12 +89,12 @@ export class AppComponent {
 
     let x = d3
       .scaleUtc()
-      .domain(d3.extent(this.data, (d: any) => new Date(d.NLI_time)))
+      .domain(d3.extent(this.LPData, (d: any) => new Date(d.NLI_time)))
       .rangeRound([margin.left, width - margin.right]);
 
     let y = d3
       .scaleLinear()
-      .domain([0.1, d3.max(this.data, (d: any) => parseFloat(d.NLI))])
+      .domain([0.1, d3.max(this.LPData, (d: any) => 1.3)])
       .rangeRound([height - margin.bottom, margin.top])
       .clamp(true);
 
@@ -116,7 +115,7 @@ export class AppComponent {
             .text('Time')
             .attr('font-size', 35)
             .attr('text-anchor', 'end')
-            .attr('x', 455)
+            .attr('x', 425)
             .attr('fill', 'white')
             .attr('stroke', 'white')
             .attr('y', 52),
@@ -175,18 +174,6 @@ export class AppComponent {
             .attr('x2', width - margin.right),
         );
 
-    let area1 = d3
-      .area<NLIConfig2>()
-      .x((d: any) => x(new Date(d.TimeStamp)))
-      .y0((d: any) => y(d.LowerBound1))
-      .y1((d: any) => y(d.UpperBound1));
-
-    let area2 = d3
-      .area<NLIConfig2>()
-      .x((d: any) => x(new Date(d.TimeStamp)))
-      .y0((d: any) => y(d.LowerBound2))
-      .y1((d: any) => y(d.UpperBound2));
-
     let line = d3
       .line<NLIConfig>()
       .x((d: any) => x(new Date(d.NLI_time)))
@@ -196,16 +183,6 @@ export class AppComponent {
       .line<NLIConfig>()
       .x((d: any) => x(new Date(d.NLI_time)))
       .y((d: any) => y(1));
-
-    let MALI = d3
-      .line<NLIConfig>()
-      .x((d: any) => x(new Date(d.NLI_time)))
-      .y((d: any) => y(0.22));
-
-    let predictionLine = d3
-      .line<NLIConfig2>()
-      .x((d: any) => x(new Date(d.TimeStamp)))
-      .y((d: any) => y(d.LR_Prediction));
 
     const svg = nliGraph
       .append('svg')
@@ -223,44 +200,17 @@ export class AppComponent {
 
     svg
       .append('path')
-      .attr('fill', '#5CD149')
-      .attr('fill-opacity', 0.2)
-      .attr('d', area1(this.dataPrediction.slice(0, this.dataPrediction.length)));
-
-    svg
-      .append('path')
-      .attr('fill', '#216716')
-      .attr('fill-opacity', 0.2)
-      .attr('d', area2(this.dataPrediction.slice(0, this.dataPrediction.length)));
-
-    svg
-      .append('path')
       .attr('fill', 'none')
       .attr('stroke', 'steelblue')
       .attr('stroke-width', 4)
-      .attr('d', line(this.data.slice(0, this.data.length)));
+      .attr('d', line(this.LPData.slice(0, this.LPData.length)));
 
     svg
       .append('path')
       .attr('fill', 'none')
       .attr('stroke', '#98E3CA')
       .attr('stroke-width', 2)
-      .attr('d', NLIlimit(this.data.slice(0, this.data.length)));
-
-    svg
-      .append('path')
-      .attr('fill', 'none')
-      .attr('stroke', '#98E3CA')
-      .attr('stroke-width', 2)
-      .attr('d', MALI(this.data.slice(0, this.data.length)));
-
-    svg
-      .append('path')
-      .attr('fill', 'none')
-      .attr('stroke', 'white')
-      .attr('stroke-width', 1.5)
-      .attr('stroke-dasharray', '3,3')
-      .attr('d', predictionLine(this.dataPrediction));
+      .attr('d', NLIlimit(this.LPData.slice(0, this.LPData.length)));
 
     return nliDiv;
   }
