@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Observable } from 'rxjs';
 import * as d3 from 'd3';
 // import { data2 } from './sampleData';
 import * as data1 from './NLI_Dec_12_Pontus_HP.json';
 import * as data2 from './NLI_Prediction_Dec_12_Pontus.json';
 import * as dataLP from './NLI_Dec_12_Pontus_LP.json';
+import 'rxjs/add/observable/interval';
 
 interface dataConfig {
   date: Date;
@@ -39,22 +41,47 @@ export class AppComponent {
   dataLPJSON = JSON.parse(JSON.stringify(dataLP));
   data = this.dataJSON;
   dataPrediction = this.dataJSON2;
-  LPData = this.dataLPJSON;
+  XLPData = this.dataLPJSON;
   public isLP: boolean = false;
   public isHP: boolean = true;
-
+  sub:any
+  index = 1
+  window: any
+  LPData = []
   constructor() {
     console.log(this.LPData)
   }
 
+
+
   ngOnInit() {
-    console.log(new Date(this.LPData[0].NLI_time));
-    const containerDiv = this.container.nativeElement;
-    if (containerDiv.childNodes[0]) {
+    this.sub = Observable.interval(1000)
+    .subscribe((val) => {
+      for(let i = 0; i < this.index; i++){
+        this.LPData.push(this.XLPData[i])
+      }
+      console.log('function is counting', this.LPData)
+      console.log(this.XLPData)
+      const containerDiv = this.container.nativeElement;
+      if (containerDiv.childNodes[0]) {
+        console.log('child removed')
       containerDiv.removeChild(containerDiv.childNodes[0]);
-    }
-    containerDiv.appendChild(this.createChart());
+      }
+      if (containerDiv.childNodes[1]) {
+        containerDiv.removeChild(containerDiv.childNodes[1]);
+        }
+      console.log(containerDiv)
+      containerDiv.appendChild(this.createChart());
+      
+      });
+
+  
+
+
+    
   }
+
+  
 
   // createHP() {
   //   this.isHP = true;
@@ -81,6 +108,7 @@ export class AppComponent {
   // }
 
   createChart() {
+    console.log('chart created')
     const nliDiv = document.createElement('div');
     const nliGraph = d3.select(nliDiv).classed('nli-chart-wrapper', true);
     let margin = { top: 20, right: 30, bottom: 30, left: 40 };
@@ -89,7 +117,7 @@ export class AppComponent {
 
     let x = d3
       .scaleUtc()
-      .domain(d3.extent(this.LPData, (d: any) => new Date(d.NLI_time)))
+      .domain(d3.extent(this.XLPData, (d: any) => new Date(d.NLI_time)))
       .rangeRound([margin.left, width - margin.right]);
 
     let y = d3
@@ -98,6 +126,11 @@ export class AppComponent {
       .rangeRound([height - margin.bottom, margin.top])
       .clamp(true);
 
+      let y2 = d3
+      .scaleLinear()
+      .domain([0.1, d3.max(this.XLPData, (d: any) => 1.3)])
+      .rangeRound([height - margin.bottom, margin.top])
+      .clamp(true);
     // d3
     //   .scaleLog()
     //   .domain([0.1, d3.max(this.data, (d: any) => parseFloat(d.NLI))])
@@ -203,14 +236,14 @@ export class AppComponent {
       .attr('fill', 'none')
       .attr('stroke', 'steelblue')
       .attr('stroke-width', 4)
-      .attr('d', line(this.LPData.slice(0, this.LPData.length)));
-
+      .attr('d', line(this.XLPData.slice(0, this.LPData.length)));
+          console.log(this.LPData)
     svg
       .append('path')
       .attr('fill', 'none')
       .attr('stroke', '#98E3CA')
       .attr('stroke-width', 2)
-      .attr('d', NLIlimit(this.LPData.slice(0, this.LPData.length)));
+      .attr('d', NLIlimit(this.XLPData.slice(0, this.XLPData.length)));
 
     return nliDiv;
   }
