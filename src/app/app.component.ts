@@ -46,7 +46,6 @@ export class AppComponent {
   public isHP: boolean = true;
   sub:any
   index = 1
-  window: any
   LPData = []
   constructor() {
     console.log(this.LPData)
@@ -55,7 +54,7 @@ export class AppComponent {
 
 
   ngOnInit() {
-    this.sub = Observable.interval(1000)
+    this.sub = Observable.interval(600)
     .subscribe((val) => {
       for(let i = 0; i < this.index; i++){
         this.LPData.push(this.XLPData[i])
@@ -117,7 +116,7 @@ export class AppComponent {
 
     let x = d3
       .scaleUtc()
-      .domain(d3.extent(this.XLPData, (d: any) => new Date(d.NLI_time)))
+      .domain(d3.extent(this.XLPData, (d: any) => new Date(d.NLI_time.toString()).setHours(new Date(d.NLI_time.toString()).getHours() + 6)))
       .rangeRound([margin.left, width - margin.right]);
 
     let y = d3
@@ -209,12 +208,12 @@ export class AppComponent {
 
     let line = d3
       .line<NLIConfig>()
-      .x((d: any) => x(new Date(d.NLI_time)))
+      .x((d: any) => x(new Date(d.NLI_time.toString()).setHours(new Date(d.NLI_time.toString()).getHours() + 6)))
       .y((d: any) => y(d.NLI));
 
     let NLIlimit = d3
       .line<NLIConfig>()
-      .x((d: any) => x(new Date(d.NLI_time)))
+      .x((d: any) => x(new Date(d.NLI_time.toString()).setHours(new Date(d.NLI_time.toString()).getHours() + 6)))
       .y((d: any) => y(1));
 
     const svg = nliGraph
