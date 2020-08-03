@@ -54,7 +54,7 @@ export class AppComponent {
 
 
   ngOnInit() {
-    this.sub = Observable.interval(675)
+    this.sub = Observable.interval(725)
     .subscribe((val) => {
       for(let i = 0; i < this.index; i++){
         this.LPData.push(this.XLPData[i])
